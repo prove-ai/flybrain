@@ -598,7 +598,9 @@ def cmd_prs():
 def cmd_live():
     urls = ["/", "/results/", "/projects/steering-circuit/", "/projects/forward-only-training/",
             "/projects/fly-retrieval/", "/js/results.js", "/css/site.css"]
-    urls += [f"/projects/{p}/" for p in OLD_PROJECTS] + ["/flyworld/", "/atlas/", "/flycodes/", "/sugar/"]
+    # /sugar/ has no index page; the project page links its explorer and anatomy views directly
+    urls += [f"/projects/{p}/" for p in OLD_PROJECTS] + ["/flyworld/", "/atlas/", "/flycodes/"]
+    urls += sorted(set(re.findall(r'href="(/sugar/[^"]+)"', (SRC / "projects/sugar-circuit/index.html").read_text())))
     urls += [f"/img/results/{f['id']}{s}.svg" for f in MANIFEST["figures"] for s in ("", "-sm")]
     urls += [m["served_at"] for m in MANIFEST["files"].values()]
     for u in urls:
